@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employees.model.Employee;
+import com.employees.model.User;
 import com.employees.repository.EmployeeRepository;
 import com.employees.restcontroller.exceptions.EmployeeNotFoundException;
 import com.employees.service.impl.EmployeeService;
@@ -26,6 +27,8 @@ public class EmployeeRestApi {
 
 	@Autowired
 	private EmployeeService employeeService;
+	
+	
 
 	// create an employee
 	@PostMapping("/employees")
@@ -36,6 +39,18 @@ public class EmployeeRestApi {
 		vo.setStatus("Success");
 		vo.setMessage("employee has been added");
 		return vo;
+	}
+	
+	@PostMapping("/student")
+	public ApplicationResponseVO signUpStudent(@RequestBody User user)
+	{
+		ApplicationResponseVO applicationResponseVO=new ApplicationResponseVO();
+		employeeService.signUpUser(user);
+		applicationResponseVO.setCode(200);
+		applicationResponseVO.setStatus("Success");
+		applicationResponseVO.setMessage("student is signed up successfully");
+		return applicationResponseVO;
+		
 	}
 
 	// get list of employees

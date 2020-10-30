@@ -6,10 +6,13 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.employees.model.Employee;
+import com.employees.model.User;
 import com.employees.repository.EmployeeRepository;
+import com.employees.repository.StudentLoginRepository;
 @Service
 @Transactional
 public class EmployeeServiceimpl implements EmployeeService {
@@ -17,11 +20,19 @@ public class EmployeeServiceimpl implements EmployeeService {
 	@Autowired
 	 private EmployeeRepository employeeRepository;
 	
+	@Autowired 
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private StudentLoginRepository studentLoginRepository;
+	
 	@Override
 	public void saveEmployee(Employee employee) {
 		 employeeRepository.save(employee);
 		
 	}
+	
+	
 
 	@Override
 	public List<Employee> getEmployees() {
@@ -34,12 +45,7 @@ public class EmployeeServiceimpl implements EmployeeService {
 	public Optional<Employee> getEmployeeById(long id) {
 
 		Optional<Employee> employee=employeeRepository.findById(id);
-		if (employee.isPresent())
-		{
-			return employee;
-		}
-		else 
-			return null;
+		return employee;
 	}
 
 	@Override
@@ -56,6 +62,16 @@ public class EmployeeServiceimpl implements EmployeeService {
 		employee2.setAddress(employee.getAddress());
 		employeeRepository.save(employee2);
 		return employee2;
+	}
+
+
+
+	@Override
+	public void signUpUser(User user) {
+		
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		studentLoginRepository.save(user);
+		
 	}
 
 }
